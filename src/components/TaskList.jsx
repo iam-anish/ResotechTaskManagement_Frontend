@@ -106,23 +106,22 @@ const TaskList = ({ reload, login}) => {
     return(
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You have done with this task!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, done it!",
     }).then((result) => {
       if (result.isConfirmed) {
         doneTask(taskId,username,password)
           .then((data) => {
             console.log(data);
-            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            Swal.fire("Done!", "Your task has been updated.", "success");
            fetchTasks();
           })
           .catch((error) => {
             console.log(error);
-            toast.error("Error while deleting category.");
           });
       }
     })
