@@ -1,4 +1,5 @@
 .home-page-container {
+    background-color: #b9e3ff;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,8 +7,8 @@
 }
   
 .header{
-  display: flex; /* This will push the title to the left and the button to the right */
-  justify-content: center; /* This will vertically align items in the center */
+  display: flex; 
+  justify-content: center;
   width: 100%;
 }
 

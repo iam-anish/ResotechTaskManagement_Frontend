@@ -6,6 +6,7 @@ const TaskForm = ({ show, handleClose, handleSubmit }) => {
     const [task, setTask] = useState({
       title: '',
       description: '',
+      priority: 'Medium'
     });
   
     const handleChange = (e) => {
@@ -19,7 +20,7 @@ const TaskForm = ({ show, handleClose, handleSubmit }) => {
     const onSubmit = (e) => {
       e.preventDefault();
       handleSubmit(task);
-      setTask({ title: '', description: '' }); // Clear form fields after submission
+      setTask({ title: '', description: '' }); 
     };
   
     return (
@@ -50,6 +51,20 @@ const TaskForm = ({ show, handleClose, handleSubmit }) => {
                 placeholder="Enter description"
               />
             </Form.Group>
+            <Form.Group controlId="formPriority">
+        <Form.Label>Priority</Form.Label>
+        <Form.Select
+          name="priority"
+          value={task.priority}
+          onChange={handleChange}
+        >
+          <option value="Urgent">Urgent</option>
+          <option value="Important">Important</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </Form.Select>
+      </Form.Group>
+
             <Button variant="primary" type="submit">
               Add Task
             </Button>

@@ -8,17 +8,34 @@ import { createTask, loginAPI } from '../services/taskService.axios.js';
 const HomePage = () => {
 
   const [login,setLogin] = useState(0); 
+
+  const [user,setUser] = useState('');
+  const [pass,setPass] = useState('');
   
   const logOut = () => {
-    localStorage.clear();
+    localStorage.removeItem('username');
+    localStorage.removeItem('password');
     setLogin(0);
-    setPassword('');
-    setUsername('');
+    setUser('');
+    setPass('');
   }
 
+  // Save username and password to localStorage
+  const saveCredentialsToLocalStorage = (username, password) => {
+    localStorage.setItem('username', username);
+    localStorage.setItem('password', password);
+  };
+
+  const getCredentialsFromLocalStorage = () => {
+    const username = localStorage.getItem('username');
+    const password = localStorage.getItem('password');
+    return { username, password };
+  };
+
+  const { username, password } = getCredentialsFromLocalStorage();
+  
+
   const [show, setShow] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [reload,setReload] = useState(0);
 
   const handleClose = () => setShow(false);
@@ -31,11 +48,12 @@ const HomePage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Perform login logic here (e.g., send data to backend, validate credentials, etc.)
-    console.log('Username:', username);
-    console.log('Password:', password);
-    loginAPI(username,password)
+    console.log('Username:', user);
+    console.log('Password:', pass);
+    loginAPI(user,pass)
       .then((data) => {
         console.log(data);
+        saveCredentialsToLocalStorage(user, pass);
         setLogin(true);
       })
       .catch((error) => {
@@ -44,19 +62,20 @@ const HomePage = () => {
     handleClose();
   };
 
-  const createTask = async (task) => {
-    const data = await createTask(task,username,password).then((data) => {
+  const handleSubmitTask = async (task) => {
+     console.log(task)
+     const data = await createTask(task,username,password).then((data) => {
         console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  const handleSubmitTask = (task) => {
-    console.log(task)
-     createTask(task);
-      setReload(0);
+      if (reload) {
+        setReload(0);
+      }
+      else{
+        setReload(1);
+      }
       handleCloseTaskForm()
   }
 
@@ -74,8 +93,8 @@ const HomePage = () => {
               <Form.Control
                 type="text"
                 placeholder="Enter username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
               />
             </Form.Group>
             <Form.Group controlId="formPassword">
@@ -83,8 +102,8 @@ const HomePage = () => {
               <Form.Control
                 type="password"
                 placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
               />
             </Form.Group>
             <Button variant="primary" type="submit">
@@ -113,14 +132,14 @@ const HomePage = () => {
         >Login</button>
         }
       </div>
-      <TaskList reload={reload}/>
-      {/* Add other components and functionalities */}
+      <TaskList reload={reload} login={login}/>
     </div>
     {loginFormModel()}
     <TaskForm
         show={showTaskForm}
         handleClose={handleCloseTaskForm}
         handleSubmit={handleSubmitTask}
+        setReload={setReload}
       />
     </>
   );
